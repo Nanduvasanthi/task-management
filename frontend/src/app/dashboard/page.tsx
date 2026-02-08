@@ -64,7 +64,7 @@ export default function DashboardPage() {
       const allFilters = { ...filters, ...customFilters };
       const response = await taskService.getTasks(allFilters);
       
-      if (response.success) {
+      if (response.status === 200 || response.status === 201) {
         const tasksData = response.data?.tasks || [];
         // Sort tasks
         const sortedTasks = sortTasks(tasksData);
