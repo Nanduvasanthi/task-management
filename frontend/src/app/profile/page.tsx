@@ -55,7 +55,7 @@ export default function ProfilePage() {
         const profileResponse = await userService.getProfile();
         
         // Get user data from the correct response structure
-        const userData = response.data?.user;
+        const userData = profileResponse.data?.user;  // ← Use 'profileResponse'r;
         
         if (userData) {
           setUser(userData);
