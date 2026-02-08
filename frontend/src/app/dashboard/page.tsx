@@ -162,54 +162,38 @@ const fetchTasks = async (customFilters: Partial<Filters> = {}) => {
 
   // Handle task creation
   const handleCreateTask = async (taskData: any) => {
-    try {
-      const response = await taskService.createTask(taskData);
-      
-      if (response.status === 200 || response.status === 201) {
-        toast.success("Task created successfully!");
-        setShowCreateModal(false);
-        fetchTasks();
-      } else {
-        toast.error(response.data?.message || "Failed to create task");
-      }
-    } catch (err: any) {
-      toast.error(err?.message || "Failed to create task");
-    }
-  };
+  try {
+    await taskService.createTask(taskData); // No status check
+    toast.success("Task created successfully!");
+    setShowCreateModal(false);
+    fetchTasks();
+  } catch (err: any) {
+    toast.error(err?.message || "Failed to create task");
+  }
+};
 
   // Handle task update
-  const handleUpdateTask = async (id: string, taskData: any) => {
-    try {
-      const response = await taskService.updateTask(id, taskData);
-      
-      if (response.status === 200 || response.status === 201) {
-        toast.success("Task updated successfully!");
-        setEditingTask(null);
-        fetchTasks();
-      } else {
-        toast.error(response.data?.message || "Failed to update task");
-      }
-    } catch (err: any) {
-      toast.error(err?.message || "Failed to update task");
-    }
-  };
-
+ const handleUpdateTask = async (id: string, taskData: any) => {
+  try {
+    await taskService.updateTask(id, taskData); // No status check
+    toast.success("Task updated successfully!");
+    setEditingTask(null);
+    fetchTasks();
+  } catch (err: any) {
+    toast.error(err?.message || "Failed to update task");
+  }
+};
   // Handle task deletion
   const handleDeleteTask = async (id: string) => {
-    try {
-      const response = await taskService.deleteTask(id);
-      
-      if (response.status === 200 || response.status === 201) {
-        toast.success("Task deleted successfully!");
-        setTaskToDelete(null);
-        fetchTasks();
-      } else {
-        toast.error(response.data?.message || "Failed to delete task");
-      }
-    } catch (err: any) {
-      toast.error(err?.message || "Failed to delete task");
-    }
-  };
+  try {
+    await taskService.deleteTask(id); // No status check
+    toast.success("Task deleted successfully!");
+    setTaskToDelete(null);
+    fetchTasks();
+  } catch (err: any) {
+    toast.error(err?.message || "Failed to delete task");
+  }
+};
 
   // Handle filter change
   const handleFilterChange = (newFilters: Partial<Filters>) => {
