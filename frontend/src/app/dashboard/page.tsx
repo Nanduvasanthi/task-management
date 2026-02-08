@@ -91,27 +91,29 @@ export default function DashboardPage() {
   }, [router]);
 
   // Fetch tasks from API
-  const fetchTasks = async (customFilters: Partial<Filters> = {}) => {
-    try {
-      setLoading(true);
-      const allFilters = { ...filters, ...customFilters };
-      const response = await taskService.getTasks(allFilters);
-      
-      if (response.status === 200 || response.status === 201) {
-       const tasksData = (response as any)?.tasks || [];
-        // Sort tasks
-        const sortedTasks = sortTasks(tasksData);
-        setTasks(sortedTasks);
-        calculateStats(sortedTasks);
-      } else {
-        toast.error(response.data?.message || "Failed to fetch tasks");
-      }
-    } catch (err: any) {
-      toast.error(err?.message || "Failed to fetch tasks");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fetch tasks from API
+const fetchTasks = async (customFilters: Partial<Filters> = {}) => {
+  try {
+    setLoading(true);
+    const allFilters = { ...filters, ...customFilters };
+    const response = await taskService.getTasks(allFilters);
+    
+    // REMOVE the status check (line 100)
+    // Your api.ts returns data object, not Axios response with status
+    
+    // CORRECT: response is {success, message, data: {tasks: [...]}}
+    const tasksData = (response as any)?.data?.tasks || [];
+    
+    // Sort tasks
+    const sortedTasks = sortTasks(tasksData);
+    setTasks(sortedTasks);
+    calculateStats(sortedTasks);
+  } catch (err: any) {
+    toast.error(err?.message || "Failed to fetch tasks");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Sort tasks
   const sortTasks = (taskList: Task[]): Task[] => {
