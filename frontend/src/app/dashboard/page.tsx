@@ -801,7 +801,7 @@ const TaskModal = ({ title, initialData, onSubmit, onCancel }: TaskModalProps) =
 
             const taskData: TaskFormData = {
                 ...formData,
-                tags: tagsArray  // Now it's an array
+               // Now it's an array
             };
 
             await onSubmit(taskData);
