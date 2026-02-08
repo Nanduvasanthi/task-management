@@ -71,7 +71,7 @@ export default function DashboardPage() {
         setTasks(sortedTasks);
         calculateStats(sortedTasks);
       } else {
-        toast.error(response.message || "Failed to fetch tasks");
+        toast.error(response.data?.message || "Failed to fetch tasks");
       }
     } catch (err: any) {
       toast.error(err?.message || "Failed to fetch tasks");
@@ -130,12 +130,12 @@ export default function DashboardPage() {
     try {
       const response = await taskService.createTask(taskData);
       
-      if (response.success) {
+      if (response.status === 200 || response.status=== 201) {
         toast.success("Task created successfully!");
         setShowCreateModal(false);
         fetchTasks();
       } else {
-        toast.error(response.message || "Failed to create task");
+        toast.error(response.data?.message || "Failed to create task");
       }
     } catch (err: any) {
       toast.error(err?.message || "Failed to create task");
@@ -147,12 +147,12 @@ export default function DashboardPage() {
     try {
       const response = await taskService.updateTask(id, taskData);
       
-      if (response.success) {
+      if (response.status === 200 || response.status === 201) {
         toast.success("Task updated successfully!");
         setEditingTask(null);
         fetchTasks();
       } else {
-        toast.error(response.message || "Failed to update task");
+        toast.error(response.data?.message || "Failed to update task");
       }
     } catch (err: any) {
       toast.error(err?.message || "Failed to update task");
@@ -164,12 +164,12 @@ export default function DashboardPage() {
     try {
       const response = await taskService.deleteTask(id);
       
-      if (response.success) {
+      if (response.status === 200 || response.status ===201) {
         toast.success("Task deleted successfully!");
         setTaskToDelete(null);
         fetchTasks();
       } else {
-        toast.error(response.message || "Failed to delete task");
+        toast.error(response.data?.message || "Failed to delete task");
       }
     } catch (err: any) {
       toast.error(err?.message || "Failed to delete task");
