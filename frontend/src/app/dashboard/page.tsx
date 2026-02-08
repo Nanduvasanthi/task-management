@@ -11,28 +11,61 @@ import {
 } from "react-icons/fa";
 import authService from "../../services/authService";
 import taskService from "../../services/taskService";
+import { AxiosResponse } from "axios";
+
+interface Task {
+  _id: string;
+  title: string;
+  description?: string;
+  status: 'todo' | 'in-progress' | 'done';
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: string;
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+}
+
+interface Stats {
+  total: number;
+  todo: number;
+  inProgress: number;
+  done: number;
+  highPriority: number;
+  overdue: number;
+}
+
+interface Filters {
+  status: string;
+  priority: string;
+  search: string;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [editingTask, setEditingTask] = useState<any>(null);
-  const [viewingTask, setViewingTask] = useState<any>(null);
-  const [taskToDelete, setTaskToDelete] = useState<any>(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [viewingTask, setViewingTask] = useState<Task | null>(null);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   
   // Filters
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     status: "",
     priority: "",
     search: ""
   });
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [sortBy, setSortBy] = useState<string>("createdAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Statistics
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<Stats>({
     total: 0,
     todo: 0,
     inProgress: 0,
@@ -58,7 +91,7 @@ export default function DashboardPage() {
   }, [router]);
 
   // Fetch tasks from API
-  const fetchTasks = async (customFilters = {}) => {
+  const fetchTasks = async (customFilters: Partial<Filters> = {}) => {
     try {
       setLoading(true);
       const allFilters = { ...filters, ...customFilters };
@@ -81,7 +114,7 @@ export default function DashboardPage() {
   };
 
   // Sort tasks
-  const sortTasks = (taskList: any[]) => {
+  const sortTasks = (taskList: Task[]): Task[] => {
     return [...taskList].sort((a, b) => {
       if (sortBy === "title") {
         return sortOrder === "asc" 
@@ -89,10 +122,10 @@ export default function DashboardPage() {
           : b.title.localeCompare(a.title);
       }
       if (sortBy === "priority") {
-        const priorityOrder = { high: 3, medium: 2, low: 1 };
-        return sortOrder === "asc"
-          ? (priorityOrder[a.priority] || 0) - (priorityOrder[b.priority] || 0)
-          : (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0);
+        const priorityOrder: Record<string, number> = { high: 3, medium: 2, low: 1 };
+        const aPriority = priorityOrder[a.priority] || 0;
+        const bPriority = priorityOrder[b.priority] || 0;
+        return sortOrder === "asc" ? aPriority - bPriority : bPriority - aPriority;
       }
       if (sortBy === "dueDate") {
         const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
@@ -107,7 +140,7 @@ export default function DashboardPage() {
   };
 
   // Calculate statistics
-  const calculateStats = (taskList: any[]) => {
+  const calculateStats = (taskList: Task[]) => {
     const now = new Date();
     const overdueCount = taskList.filter(task => 
       task.dueDate && 
@@ -130,7 +163,7 @@ export default function DashboardPage() {
     try {
       const response = await taskService.createTask(taskData);
       
-      if (response.status === 200 || response.status=== 201) {
+      if (response.status === 200 || response.status === 201) {
         toast.success("Task created successfully!");
         setShowCreateModal(false);
         fetchTasks();
@@ -164,7 +197,7 @@ export default function DashboardPage() {
     try {
       const response = await taskService.deleteTask(id);
       
-      if (response.status === 200 || response.status ===201) {
+      if (response.status === 200 || response.status === 201) {
         toast.success("Task deleted successfully!");
         setTaskToDelete(null);
         fetchTasks();
@@ -177,8 +210,8 @@ export default function DashboardPage() {
   };
 
   // Handle filter change
-  const handleFilterChange = (newFilters: any) => {
-    setFilters(newFilters);
+  const handleFilterChange = (newFilters: Partial<Filters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
     fetchTasks(newFilters);
   };
 
@@ -196,7 +229,7 @@ export default function DashboardPage() {
   };
 
   // Format date
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return "No date";
     const date = new Date(dateString);
     const now = new Date();
@@ -386,7 +419,7 @@ export default function DashboardPage() {
                     type="text"
                     placeholder="Search tasks by title or description..."
                     value={filters.search}
-                    onChange={(e) => handleFilterChange({ ...filters, search: e.target.value })}
+                    onChange={(e) => handleFilterChange({ search: e.target.value })}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                   />
                 </div>
@@ -396,7 +429,7 @@ export default function DashboardPage() {
               <div className="flex gap-3">
                 <select
                   value={filters.status}
-                  onChange={(e) => handleFilterChange({ ...filters, status: e.target.value })}
+                  onChange={(e) => handleFilterChange({ status: e.target.value })}
                   className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 >
                   <option value="">All Status</option>
@@ -407,7 +440,7 @@ export default function DashboardPage() {
 
                 <select
                   value={filters.priority}
-                  onChange={(e) => handleFilterChange({ ...filters, priority: e.target.value })}
+                  onChange={(e) => handleFilterChange({ priority: e.target.value })}
                   className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                 >
                   <option value="">All Priority</option>
@@ -503,7 +536,7 @@ export default function DashboardPage() {
                               {tag}
                             </span>
                           ))}
-                          {task.tags?.length > 2 && (
+                          {task.tags && task.tags.length > 2 && (
                             <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800">
                               +{task.tags.length - 2} more
                             </span>
@@ -636,7 +669,7 @@ export default function DashboardPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tags</label>
                 <div className="flex flex-wrap gap-2">
-                  {viewingTask.tags?.length > 0 ? (
+                  {viewingTask.tags && viewingTask.tags.length > 0 ? (
                     viewingTask.tags.map((tag: string, index: number) => (
                       <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
                         <FaTags className="w-3 h-3 mr-1" />
@@ -729,8 +762,24 @@ export default function DashboardPage() {
 }
 
 // Task Modal Component
-const TaskModal = ({ title, initialData, onSubmit, onCancel }: any) => {
-  const [formData, setFormData] = useState({
+interface TaskFormData {
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  dueDate: string;
+  tags: string;
+}
+
+interface TaskModalProps {
+  title: string;
+  initialData: Task | null;
+  onSubmit: (data: TaskFormData) => void;
+  onCancel: () => void;
+}
+
+const TaskModal = ({ title, initialData, onSubmit, onCancel }: TaskModalProps) => {
+  const [formData, setFormData] = useState<TaskFormData>({
     title: initialData?.title || "",
     description: initialData?.description || "",
     status: initialData?.status || "todo",
