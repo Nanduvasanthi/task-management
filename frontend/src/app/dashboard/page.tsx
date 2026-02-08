@@ -789,19 +789,26 @@ const TaskModal = ({ title, initialData, onSubmit, onCancel }: TaskModalProps) =
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const taskData = {
-        ...formData,
-        tags: formData.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag)
-      };
-      await onSubmit(taskData);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            // Convert comma-separated string to array
+            const tagsArray = formData.tags
+                .split(',')
+                .map((tag: string) => tag.trim())
+                .filter((tag: string) => tag.length > 0);
+
+            const taskData: TaskFormData = {
+                ...formData,
+                tags: tagsArray  // Now it's an array
+            };
+
+            await onSubmit(taskData);
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
