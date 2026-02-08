@@ -210,7 +210,7 @@ export default function ProfilePage() {
       setSuccess("Profile updated successfully!");
       
       // Update state with response data
-      const userData = response.data?.user || response.user;
+     const userData = response.data?.user;
       if (userData) {
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
