@@ -768,7 +768,7 @@ interface TaskFormData {
   status: string;
   priority: string;
   dueDate: string;
-  tags: string;
+  tags: string[];
 }
 
 interface TaskModalProps {
@@ -785,7 +785,7 @@ const TaskModal = ({ title, initialData, onSubmit, onCancel }: TaskModalProps) =
     status: initialData?.status || "todo",
     priority: initialData?.priority || "medium",
     dueDate: initialData?.dueDate ? new Date(initialData.dueDate).toISOString().split('T')[0] : "",
-    tags: initialData?.tags?.join(', ') || ""
+    tags: initialData?.tags || []
   });
   const [submitting, setSubmitting] = useState(false);
 
