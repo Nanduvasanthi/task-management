@@ -14,7 +14,13 @@ A full-stack task management web application with secure authentication, a prote
 
 > All backend APIs are protected using JWT-based authentication.
 
----
+### Screenshots
+
+### Authentication Pages
+
+<img width="912" height="866" alt="image" src="https://github.com/user-attachments/assets/efe64b23-74b0-4c54-b29c-d7401a2fcf6b" />  <img width="918" height="856" alt="image" src="https://github.com/user-attachments/assets/5f00124f-1964-4b07-9e0b-c2b1d5486462" />
+
+
 
 ## 📌 Project Overview
 
