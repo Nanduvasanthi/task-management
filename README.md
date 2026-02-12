@@ -18,7 +18,23 @@ A full-stack task management web application with secure authentication, a prote
 
 ### Authentication Pages
 
-<img width="912" height="866" alt="image" src="https://github.com/user-attachments/assets/efe64b23-74b0-4c54-b29c-d7401a2fcf6b" />  <img width="918" height="856" alt="image" src="https://github.com/user-attachments/assets/5f00124f-1964-4b07-9e0b-c2b1d5486462" />
+<div align="center"> <table> <tr> <td align="center" width="50%"> <strong>Login Page</strong><br> <img width="912" height="866" alt="Login Page" src="https://github.com/user-attachments/assets/efe64b23-74b0-4c54-b29c-d7401a2fcf6b" /> </td> <td align="center" width="50%"> <strong>Signup Page</strong><br> <img width="918" height="856" alt="Signup Page" src="https://github.com/user-attachments/assets/5f00124f-1964-4b07-9e0b-c2b1d5486462" /> </td> </tr> </table> <p><em>Secure authentication with JWT and form validation</em></p> </div>
+
+### Dashboard Overview
+
+<div align="center"> <img width="1915" height="858" alt="Dashboard" src="https://github.com/user-attachments/assets/ad5a7029-86e2-41c3-a9b4-f09bc837f793" /> <p><em>Main dashboard with task list and status overview</em></p> </div>
+
+###  Task Management
+
+<div align="center"> <table> <tr> <td align="center" width="50%"> <strong>Create Task</strong><br> <img width="1895" height="861" alt="Create Task" src="https://github.com/user-attachments/assets/59602384-31eb-4fdf-b6dd-0b24038ea408" /> </td> <td align="center" width="50%"> <strong>Edit Task</strong><br> <img width="1893" height="869" alt="Edit Task" src="https://github.com/user-attachments/assets/c4e4f908-132c-4783-80d6-1a1954f8debf" /> </td> </tr> </table> <p><em>Complete CRUD operations with modal forms</em></p> </div>
+
+### Search & Filter
+
+<div align="center"> <img width="1907" height="700" alt="Search and Filter" src="https://github.com/user-attachments/assets/77278419-8f06-41d6-9693-370f3f5590c0" /> <p><em>Real-time search by title and filter by status</em></p> </div>
+
+### Profile Management
+
+<div align="center"> <img width="1919" height="874" alt="Profile Page" src="https://github.com/user-attachments/assets/b314abb3-a7fa-49ac-89ee-fe04dcfc350c" /> <p><em>User profile view and edit functionality</em></p> </div>
 
 
 
